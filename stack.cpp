@@ -4,11 +4,11 @@
 
 using namespace std;
 
-__interface FormularUnit {
+class FormularUnit {
 public:
-	bool IsChar() = 0;
-	double GetDValue() = 0;
-	char GetCValue() = 0;
+	virtual bool IsChar() = 0;
+	virtual double GetDValue() = 0;
+	virtual char GetCValue() = 0;
 };
 
 class Num : public FormularUnit {
@@ -51,6 +51,7 @@ public:
 
 bool CheckChar(char value) {
 	if (value >= 48 && value <= 57) return false;
+	if (value == '.') return false;
 	return true;
 }
 
@@ -70,7 +71,9 @@ int main() {
 
 	char c = ' ';
 	bool beforeNum = false;
+	bool beforeDot = false;
 	double numValue = 0;
+	double dotValue = 0;
 
 	vector<FormularUnit *> formular;
 	vector<Char*> chars;
@@ -86,6 +89,16 @@ int main() {
 		if (c == ' ' || c == '\n')
 			continue;
 		if (!CheckChar(c)) {
+			if (c == '.') {
+				beforeDot = true;
+				dotValue = 0.1f;
+				continue;
+			}
+			if (beforeDot) {
+				numValue += dotValue * (c - 48);
+				dotValue *= 0.1f;
+				continue;
+			}
 			numValue *= 10;
 			numValue += c - 48;
 			beforeNum = true;
@@ -96,6 +109,7 @@ int main() {
 			numValue = 0;
 		}
 		beforeNum = false;
+		beforeDot = false;
 
 		Char* t1 = new Char(c);
 		while (!chars.empty() && Char::Compare(chars.back(), t1)) {
@@ -113,19 +127,9 @@ int main() {
 		formular.push_back(chars.back());
 		chars.pop_back();
 	}
-	vector<FormularUnit*>::iterator iter = formular.begin();
 
-	/*
-	for (; iter != formular.end(); iter++) {
-		if ((*iter)->IsChar()) {
-			cout << (*iter)->GetCValue() << ' ';
-			continue;
-		}
-		cout << (*iter)->GetDValue() << ' ';
-	}
-	*/
+	vector<FormularUnit*>::iterator iter = formular.begin();
 	vector<FormularUnit*> numbers;
-	iter = formular.begin();
 
 	double retval = 0;
 
