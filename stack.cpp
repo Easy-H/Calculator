@@ -49,10 +49,40 @@ public:
 	}
 };
 
-bool CheckChar(char value) {
+bool isChar(char value) {
 	if (value >= 48 && value <= 57) return false;
 	if (value == '.') return false;
 	return true;
+}
+
+bool input(double& retval, char& stopChar) {
+    bool beforeNum = false;
+    bool beforeDot = false;
+    double dotValue = 0;
+
+    retval = 0;
+
+    while (true) {
+        char c = getc(stdin);
+        if (c == ' ' || c == '\n')
+            continue;
+        if (isChar(c)) {
+            stopChar = c;
+            return beforeNum;
+        }
+        beforeNum = true;
+        if (c == '.') {
+            beforeDot = true;
+            dotValue = 0.1f;
+            continue;
+        }
+        if (dotValue) {
+            retval += dotValue * (c - 48);
+            dotValue *= 0.1f;
+        }
+        retval *= 10;
+        retval += c - 48;
+    }
 }
 
 double Calc(double d2, double d1, char op) {
@@ -69,47 +99,14 @@ double Calc(double d2, double d1, char op) {
 
 int main() {
 
-	char c = ' ';
-	bool beforeNum = false;
-	bool beforeDot = false;
-	double numValue = 0;
-	double dotValue = 0;
-
 	vector<FormularUnit *> formular;
 	vector<Char*> chars;
 
-	while (c != '=') {
-		c = getc(stdin);
-		if (c == '=') {
-			if (beforeNum) {
-				formular.push_back(new Num(numValue));
-			}
-			break;
-		}
-		if (c == ' ' || c == '\n')
-			continue;
-		if (!CheckChar(c)) {
-			if (c == '.') {
-				beforeDot = true;
-				dotValue = 0.1f;
-				continue;
-			}
-			if (beforeDot) {
-				numValue += dotValue * (c - 48);
-				dotValue *= 0.1f;
-				continue;
-			}
-			numValue *= 10;
-			numValue += c - 48;
-			beforeNum = true;
-			continue;
-		}
-		if (beforeNum) {
-			formular.push_back(new Num(numValue));
-			numValue = 0;
-		}
-		beforeNum = false;
-		beforeDot = false;
+	while (true) {
+		double d;
+		char c;
+		if (input(d, c)) formular.push_back(new Num(d));
+		if (c == '=') break;
 
 		Char* t1 = new Char(c);
 		while (!chars.empty() && Char::Compare(chars.back(), t1)) {
