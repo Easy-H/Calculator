@@ -43,6 +43,7 @@ bool input(double& retval, char& stopChar) {
         if (dotValue) {
             retval += dotValue * (c - 48);
             dotValue *= 0.1f;
+			continue;
         }
         retval *= 10;
         retval += c - 48;
@@ -77,7 +78,7 @@ double Calculator(char endChar) {
         }
     }
     if (ch[0] == endChar) return value[0];
-    input(value[1], ch[1]);
+    bool b = input(value[1], ch[1]);
 
     while (true) {
 
@@ -87,15 +88,24 @@ double Calculator(char endChar) {
 
         }
         if (ch[1] == '(') {
+            if (!b) {
+                value[1] = Calculator(')');
+                double tmp;
+                input(tmp, ch[1]);
+
+                continue;
+            }
             ch[1] = '*';
             value[2] = Calculator(')');
-            double tmp;
-            input(tmp, ch[2]);
+            double t;
+            input(t, ch[2]);
+            
         }
         else {
             if (!input(value[2], ch[2])) {
-                if (ch[2] == '(')
+                if (ch[2] == '(') {
                     value[2] = Calculator(')');
+                }
                 double tmp;
                 input(tmp, ch[2]);
             }

@@ -42,7 +42,9 @@ public:
 		char c2 = C2->GetCValue();
 
 		if (c2 == '(') return false;
-		if (c2 == ')' || c2 == '+' || c2 == '-') return true;
+		if (c2 == ')') return true;
+		if (c1 =='(') return false;
+		if (c2 == '+' || c2 == '-') return true;
 		if (c1 == '*' || c1 == '/') return true;
 
 		return false;
@@ -79,6 +81,7 @@ bool input(double& retval, char& stopChar) {
         if (dotValue) {
             retval += dotValue * (c - 48);
             dotValue *= 0.1f;
+			continue;
         }
         retval *= 10;
         retval += c - 48;

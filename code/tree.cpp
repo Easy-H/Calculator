@@ -129,6 +129,7 @@ bool input(double& retval, char& stopChar) {
         if (dotValue) {
             retval += dotValue * (c - 48);
             dotValue *= 0.1f;
+			continue;
         }
         retval *= 10;
         retval += c - 48;
