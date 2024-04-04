@@ -105,10 +105,14 @@ int main() {
 	while (true) {
 		double d;
 		char c;
-		if (input(d, c)) formular.push_back(new Num(d));
+		bool numInput = input(d, c);
+		if (numInput) formular.push_back(new Num(d));
 		if (c == '=') break;
 
 		Char* t1 = new Char(c);
+		if (numInput && c == '(') {
+			chars.push_back(new Char('*'));
+		}
 		while (!chars.empty() && Char::Compare(chars.back(), t1)) {
 			Char* t = chars.back();
 			chars.pop_back();

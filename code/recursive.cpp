@@ -2,6 +2,17 @@
 
 using namespace std;
 
+bool isChar(char value);
+bool input(double& retval, char& stopChar);
+double Calc(double d1, double d2, char op);
+double Calculator(char endChar);
+
+int main() {
+
+    cout << Calculator('=') << endl;
+}
+
+
 bool isChar(char value) {
     if (value >= 48 && value <= 57) return false;
     if (value == '.') return false;
@@ -50,7 +61,7 @@ double Calc(double d1, double d2, char op) {
 
 }
 
-int Calculator(char endChar) {
+double Calculator(char endChar) {
 
     double value[3];
     char ch[3];
@@ -102,11 +113,5 @@ int Calculator(char endChar) {
 
     }
 
-
     return value[0];
-}
-
-int main() {
-
-    cout << Calculator('=') << endl;
 }
